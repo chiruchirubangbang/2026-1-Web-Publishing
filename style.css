@@ -1,0 +1,1457 @@
+/* ============================================================
+   a.p. coffee&bakery — style.css
+   ============================================================ */
+
+/* ──────────────────────────────────────────
+   폰트 등록 (@font-face)
+   ✏️ 폰트 파일 경로가 달라지면 src의 url() 안을 수정하세요.
+────────────────────────────────────────── */
+/* 본문/내비 폰트: EloquiaText ExtraLight */
+@font-face {
+  font-family: 'EloquiaDisplay';
+  src: url('ap/font/Typekiln\ -\ EloquiaText-ExtraLight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 강조 폰트: EloquiaDisplay ExtraBold (카페 이름 등) */
+/* ✏️ 폰트 파일 경로가 다르면 아래 url()을 수정하세요 */
+@font-face {
+  font-family: 'EloquiaBold';
+  src: url('ap/font/Typekiln\ -\ EloquiaDisplay-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* ──────────────────────────────────────────
+   CSS 변수 (색상, 폰트, 간격 설정)
+────────────────────────────────────────── */
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1a1a18;
+  --color-muted: #7a7670;
+  --color-accent: #c8a97a;
+
+  --font-display: 'EloquiaDisplay', Georgia, serif;   /* 내비 + 일반 텍스트: ExtraLight */
+  --font-bold: 'EloquiaBold', Georgia, serif;         /* 카페 이름 강조: ExtraBold */
+  --font-main: Georgia, 'Times New Roman', serif;     /* 본문/카드 텍스트 */
+  --font-accent: 'Helvetica Neue', Arial, sans-serif; /* 라벨/캡션 */
+
+  --nav-height: 88px;   /* ① 내비게이션 바 높이 키움 */
+  --gap: 12px;
+}
+
+
+/* ──────────────────────────────────────────
+   기본 리셋 & 전역 스타일
+────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  min-height: 100vh;
+  opacity: 0;
+  animation: fadeInPage 0.8s ease forwards;
+}
+
+@keyframes fadeInPage { to { opacity: 1; } }
+
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* ──────────────────────────────────────────
+   내비게이션 바
+────────────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  width: 100%;
+  height: var(--nav-height);   /* ① 높이 변수 반영 */
+  z-index: 1000;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 52px;             /* ① 좌우 패딩도 조금 키움 */
+  mix-blend-mode: normal;
+}
+
+.navbar.scrolled {
+  background: rgba(245, 242, 237, 0.0);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;                   /* ① 요소 간격 키움 */
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;                   /* ① 아이콘 간격 키움 */
+}
+
+/* ② 로고: display:none 제거 → 이미지 보이게 */
+.nav-logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  height: 44px;                /* ① 로고 크기도 키움 */
+  width: auto;
+  object-fit: contain;
+  display: block;              /* ② none → block 으로 변경 */
+}
+
+/* ③ 내비 링크 폰트: EloquiaDisplay 적용 */
+.nav-link {
+  font-family: var(--font-display);   /* ③ 커스텀 폰트 적용 */
+  font-size: 15px;                    /* ① 크기도 살짝 키움 */
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  position: relative;
+  transition: opacity 0.2s;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-text);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after { width: 100%; }
+.nav-link:hover { opacity: 0.6; }
+
+/* 아이콘 버튼 (인스타, 지도) */
+.nav-icon {
+  display: flex;
+  align-items: center;
+  color: var(--color-text);
+  opacity: 0.85;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.nav-icon svg {
+  width: 22px;    /* ① 아이콘도 살짝 키움 */
+  height: 22px;
+}
+
+.nav-icon:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+
+/* ──────────────────────────────────────────
+   ④ 홈 갤러리 — 자유 배치 콜라주 레이아웃
+   레퍼런스처럼 사진마다 위치·크기·여백이 제각각인
+   absolute 자유 배치 방식으로 변경합니다.
+────────────────────────────────────────── */
+.home-gallery {
+  position: relative;
+  width: 100%;
+  /* 전체 높이: 아이템이 겹치므로 충분히 확보 */
+  min-height: 2200px;
+  padding-top: var(--nav-height);
+  overflow: hidden;
+}
+
+/* 갤러리 아이템 공통: absolute 자유 배치 */
+.gallery-item {
+  position: absolute;
+  overflow: hidden;
+
+  /* 스크롤 진입 시 애니메이션 */
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+
+.gallery-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 이미지 아이템 ── */
+.img-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.img-item:hover img {
+  transform: scale(1.03);
+}
+
+/* ──────────────────────────────────────────
+   ④ 각 아이템별 위치·크기 (데스크탑 기준)
+   top/left 값을 바꾸면 위치 조정,
+   width/height를 바꾸면 크기 조정이에요.
+────────────────────────────────────────── */
+
+/* 사진 1 — 좌측 상단, 세로로 긴 사진 */
+.item-1 {
+  top: 110px;
+  left: 2%;
+  width: 30%;
+  height: 480px;
+}
+
+/* 사진 2 — 우측 상단, 가로로 넓은 사진 */
+.item-2 {
+  top: 100px;
+  left: 63%;
+  width: 35%;
+  height: 300px;
+}
+
+/* 사진 4 — 중앙, 세로로 긴 사진 */
+.item-4 {
+  top: 520px;
+  left: 26%;
+  width: 28%;
+  height: 420px;
+}
+
+.item-logotype {
+  top: 420px;
+  left: 50%;
+  width: 18%;
+  height: 120px;
+}
+
+/* 사진 5 — 우측 하단, 가로 넓은 사진 */
+.item-5 {
+  top: 580px;
+  left: 60%;
+  width: 38%;
+  height: 280px;
+}
+
+/* 텍스트 3 — 영업 시간, 중앙 하단 */
+.item-info {
+  top: 980px;
+  left: 5%;
+  width: 22%;
+  height: 200px;
+  background: var(--color-accent);
+  color: #fff;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 28px;
+}
+
+/* 사진 6 — 중앙 하단 */
+.item-6 {
+  top: 1020px;
+  left: 4%;
+  width: 24%;
+  height: 300px;
+}
+
+/* 사진 7 — 우측, 가로 넓은 사진 */
+.item-7 {
+  top: 960px;
+  left: 58%;
+  width: 40%;
+  height: 360px;
+}
+
+/* 텍스트 4 — 마무리 문구, 좌측 최하단 */
+.item-closing {
+  top: 1360px;
+  left: 6%;
+  width: 42%;
+  height: 180px;
+  background: #f0ebe2;
+  border-top: 1px solid #d8d2c8;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px 36px;
+}
+
+/* 사진 8 — 우측 하단 */
+.item-8 {
+  top: 1280px;
+  left: 26%;
+  width: 26%;
+  height: 360px;
+}
+
+/* 사진 9 — 최하단 가로 전체 */
+.item-9 {
+  top: 1700px;
+  width: 100%;
+  height: 500px;
+}
+
+
+/* ── 텍스트 카드 공통 스타일 ── */
+.intro-text .text-en {
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.3px;
+}
+
+.intro-text .text-ko {
+  font-family: var(--font-accent);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  margin-top: 14px;
+}
+
+.location-text .text-en {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin: 8px 0 10px;
+}
+
+.location-text .text-sub {
+  font-family: var(--font-accent);
+  font-size: 12px;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+.info-text .text-en {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-top: 10px;
+}
+
+.closing-text .text-en {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.45;
+  font-style: italic;
+  color: var(--color-text);
+}
+
+/* 공통 라벨 */
+.label {
+  font-family: var(--font-accent);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.info-text .label {
+  color: rgba(255,255,255,0.7);
+}
+
+
+/* ──────────────────────────────────────────
+   반응형: 태블릿 (900px 이하)
+   → absolute 대신 grid로 폴백
+────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .home-gallery {
+    position: static;
+    min-height: unset;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap);
+    padding: 100px var(--gap) 12px;
+  }
+
+  .gallery-item {
+    position: static;
+    width: auto !important;
+    height: auto !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  .item-2,
+  .item-6 { grid-row: span 2; }
+
+  .item-1,
+  .item-8,
+  .item-9 { grid-column: span 2; }
+
+  .navbar { padding: 0 24px; }
+  .nav-left { gap: 24px; }
+}
+
+
+/* ──────────────────────────────────────────
+   반응형: 모바일 (480px 이하)
+────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .home-gallery {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 260px;
+  }
+
+  .gallery-item {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
+
+  .nav-link { font-size: 12px; }
+  .intro-text .text-en { font-size: 20px; }
+}
+
+
+/* ══════════════════════════════════════════
+   커스텀 마우스 포인터
+   ✏️ 커서 SVG 파일 경로는 HTML의 id="custom-cursor" img src 속성에서 설정하세요.
+   커서 이미지의 크기는 width/height로 조절하세요. (기본 32px)
+   pointer-events: none → 커서 이미지 자체는 클릭에 반응하지 않아요.
+══════════════════════════════════════════ */
+
+/* 전체 페이지에서 기본 커서 숨김 */
+* {
+  cursor: none !important;
+}
+
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 96px;      /* ✏️ 커서 크기 조절 */
+  height: 96px;     /* ✏️ 커서 크기 조절 */
+  pointer-events: none;   /* 커서가 클릭을 막지 않게 */
+  z-index: 99999;
+  transform: translate(-50%, -50%);  /* 마우스 위치 중앙 정렬 */
+  transition: transform 0.3s ease;  /* 미세한 부드러움 */
+  will-change: transform, left, top;
+}
+
+/* 클릭할 수 있는 요소 위에서 커서가 살짝 커지는 효과 */
+#custom-cursor.is-hovering {
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+
+/* ══════════════════════════════════════════
+   라이트박스 (사진 크게 보기)
+══════════════════════════════════════════ */
+
+/* 오버레이 전체 */
+.lightbox {
+  position: fixed;
+  inset: 0;                        /* top/right/bottom/left: 0 전부 */
+  z-index: 10000;
+  background: rgba(255, 255, 255, 0.96);  /* 불투명한 흰색 배경 */
+  display: none;                   /* 기본: 숨김 */
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* JS가 .is-open 클래스를 추가하면 나타남 */
+.lightbox.is-open {
+  display: flex;
+  opacity: 1;
+}
+
+/* 사진 + 캡션 중앙 영역 */
+.lightbox-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+/* 라이트박스 사진 */
+.lightbox-img {
+  max-width: 100%;
+  max-height: calc(100vh - 180px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  /* 사진 전환 애니메이션 */
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.lightbox-img.is-loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 사진 출처 캡션 */
+.lightbox-caption {
+  margin-top: 14px;
+  font-family: var(--font-accent);
+  font-size: 12px;
+  color: var(--color-muted);
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+/* 공통: 좌우 화살표 + 닫기 버튼 */
+.lightbox-prev,
+.lightbox-next,
+.lightbox-close {
+  background: none;
+  border: none;
+  cursor: none;    /* 커스텀 커서 유지 */
+  color: var(--color-text);
+  line-height: 1;
+  transition: opacity 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  opacity: 0.5;
+  transform: scale(1.1);
+}
+
+/* 이전/다음 화살표 */
+.lightbox-prev,
+.lightbox-next {
+  font-size: 56px;
+  font-weight: 200;
+  padding: 0 28px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 닫기 버튼 (우측 상단 고정) */
+.lightbox-close {
+  position: absolute;
+  top: 28px;
+  right: 36px;
+  font-size: 24px;
+  opacity: 0.6;
+  z-index: 10001;
+  padding: 8px;
+}
+
+.lightbox-close:hover {
+  opacity: 1;
+}
+
+
+/* ══════════════════════════════════════════
+   푸터
+══════════════════════════════════════════ */
+.site-footer {
+  width: 100%;
+  min-height: 200px;
+  background: var(--color-bg);
+  border-top: 1px solid #e0dbd3;
+  display: flex;
+  align-items: center;
+}
+
+.footer-inner {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  /* 내비게이션 바와 동일한 좌우 패딩, 상하 여백은 넉넉하게 */
+  padding: 48px 52px;
+  gap: 40px;
+}
+
+/* 좌측 / 우측 컬럼 공통 */
+.footer-left,
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  /* 각 줄 사이 여백 */
+  gap: 10px;
+}
+
+/* 모든 footer 텍스트 기본: EloquiaText ExtraLight */
+.footer-left p,
+.footer-right p {
+  font-family: var(--font-accent);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+}
+
+/* 카페 이름만: EloquiaDisplay ExtraBold */
+.footer-brand {
+  font-family: var(--font-bold) !important;
+  font-weight: 800 !important;
+  font-size: 16px !important;
+  color: var(--color-text) !important;
+  letter-spacing: 0.02em;
+  /* 이름과 아래 소개 문구 사이 여백을 좀 더 주기 */
+  margin-bottom: 3px;
+}
+
+/* 우측 정렬 */
+.footer-right {
+  text-align: right;
+}
+
+/* 반응형: 600px 이하에서 상하 배치로 전환 */
+@media (max-width: 600px) {
+  .footer-inner {
+    justify-content: space-between;
+    padding: 36px 24px;
+    gap: 28px;
+  }
+
+  .footer-left{
+    text-align: left;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+}
+
+
+/* ══════════════════════════════════════════
+   탭 뷰 전환 (홈 ↔ 메뉴 ↔ 프로그램)
+   — 페이드인 애니메이션으로 통일감 부여
+══════════════════════════════════════════ */
+.page-view {
+  display: none;
+  opacity: 0;
+}
+
+.page-view.is-active {
+  display: block;
+  animation: fadeInView 0.55s ease forwards;
+}
+
+@keyframes fadeInView {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 현재 활성 탭 nav-link 스타일 (밑줄 고정) */
+.nav-link.is-current::after {
+  width: 100%;
+}
+.nav-link.is-current {
+  opacity: 0.6;
+}
+
+
+/* ══════════════════════════════════════════
+   메뉴 페이지
+══════════════════════════════════════════ */
+.menu-page {
+  padding-top: calc(var(--nav-height) + 60px);
+  padding-bottom: 100px;
+  padding-left: 80px;
+  padding-right: 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── 메뉴판 전체 이미지 ── */
+.menu-board {
+  width: 100%;
+  margin-bottom: 80px;
+  display: flex;
+  justify-content: center;
+}
+
+.menu-board-img {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── RECOMMENDATION 제목 ──
+   menu-page의 padding-left와 동일한 좌측 정렬, 별도 indent 없음 */
+.menu-section-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+/* ── 세부 메뉴 그리드 (2열) ── */
+.menu-grid {
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px 80px;
+}
+
+/* ── 메뉴 카드 ── */
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 메뉴 사진: 가로가 더 긴 직사각형 (4:3 비율) */
+.menu-img-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f0ece6;
+}
+
+.menu-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+/* 메뉴 사진 hover scale 효과 없음 */
+.menu-card:hover .menu-img-wrap img {
+  transform: none;
+}
+
+/* 메뉴 이름 */
+.menu-name {
+  font-family: var(--font-accent);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-top: 8px;
+}
+
+/* 메뉴 설명 */
+.menu-desc {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-muted);
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+}
+
+/* 메뉴 가격 */
+.menu-price {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+
+/* ══════════════════════════════════════════
+   프로그램 페이지
+   — menu-page와 동일한 padding 구조
+══════════════════════════════════════════ */
+.program-page {
+  padding-top: calc(var(--nav-height) + 60px);
+  padding-bottom: 100px;
+  padding-left: 80px;
+  padding-right: 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 포스터 그리드 (3열) */
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 36px;
+}
+
+/* 포스터 카드 — 클릭 가능한 느낌 */
+.program-card {
+  display: flex;
+  flex-direction: column;
+  cursor: none;
+}
+
+/* 포스터 사진 래퍼: 세로가 더 긴 직사각형 (포스터 비율 2:3) */
+.program-img-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #f0ece6;
+}
+
+.program-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* 홈 갤러리 사진과 동일한 hover scale */
+  transition: transform 0.6s ease;
+}
+
+.program-card:hover .program-img-wrap img {
+  transform: scale(1.03);
+}
+
+
+/* ── 반응형: 태블릿 (900px 이하) ── */
+@media (max-width: 900px) {
+  .home-gallery {
+    position: static;
+    min-height: unset;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 220px;
+    gap: var(--gap);
+    padding: var(--nav-height) var(--gap) 80px;
+  }
+
+  .gallery-item {
+    position: static;
+    width: auto !important;
+    height: auto !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  .item-intro,
+  .item-4 { grid-row: span 2; }
+
+  .item-2,
+  .item-5,
+  .item-7,
+  .item-closing { grid-column: span 2; }
+
+  .item-intro,
+  .item-location,
+  .item-info,
+  .item-closing { min-height: 200px; }
+
+  .navbar { padding: 0 24px; }
+  .nav-left { gap: 24px; }
+
+  .menu-page,
+  .program-page {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 24px;
+  }
+  .program-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 20px;
+  }
+}
+
+/* ── 반응형: 모바일 (480px 이하) ── */
+@media (max-width: 480px) {
+  .home-gallery {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 260px;
+  }
+
+  .gallery-item {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
+
+  .nav-link { font-size: 12px; }
+  .intro-text .text-en { font-size: 20px; }
+
+  .menu-grid,
+  .program-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ══════════════════════════════════════════
+   커스텀 마우스 포인터
+   ✏️ 커서 SVG 파일 경로는 HTML의 id="custom-cursor" img src 속성에서 설정하세요.
+   커서 이미지의 크기는 width/height로 조절하세요. (기본 32px)
+   pointer-events: none → 커서 이미지 자체는 클릭에 반응하지 않아요.
+══════════════════════════════════════════ */
+
+/* 전체 페이지에서 기본 커서 숨김 */
+* {
+  cursor: none !important;
+}
+
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 96px;      /* ✏️ 커서 크기 조절 */
+  height: 96px;     /* ✏️ 커서 크기 조절 */
+  pointer-events: none;   /* 커서가 클릭을 막지 않게 */
+  z-index: 99999;
+  transform: translate(-50%, -50%);  /* 마우스 위치 중앙 정렬 */
+  transition: transform 0.3s ease;  /* 미세한 부드러움 */
+  will-change: transform, left, top;
+}
+
+/* 클릭할 수 있는 요소 위에서 커서가 살짝 커지는 효과 */
+#custom-cursor.is-hovering {
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+
+/* ══════════════════════════════════════════
+   라이트박스 (사진 크게 보기)
+══════════════════════════════════════════ */
+
+/* 오버레이 전체 */
+.lightbox {
+  position: fixed;
+  inset: 0;                        /* top/right/bottom/left: 0 전부 */
+  z-index: 10000;
+  background: rgba(255, 255, 255, 0.96);  /* 불투명한 흰색 배경 */
+  display: none;                   /* 기본: 숨김 */
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* JS가 .is-open 클래스를 추가하면 나타남 */
+.lightbox.is-open {
+  display: flex;
+  opacity: 1;
+}
+
+/* 사진 + 캡션 중앙 영역 */
+.lightbox-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+/* 라이트박스 사진 */
+.lightbox-img {
+  max-width: 100%;
+  max-height: calc(100vh - 180px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  /* 사진 전환 애니메이션 */
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.lightbox-img.is-loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 사진 출처 캡션 */
+.lightbox-caption {
+  margin-top: 14px;
+  font-family: var(--font-accent);
+  font-size: 12px;
+  color: var(--color-muted);
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+/* 공통: 좌우 화살표 + 닫기 버튼 */
+.lightbox-prev,
+.lightbox-next,
+.lightbox-close {
+  background: none;
+  border: none;
+  cursor: none;    /* 커스텀 커서 유지 */
+  color: var(--color-text);
+  line-height: 1;
+  transition: opacity 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  opacity: 0.5;
+  transform: scale(1.1);
+}
+
+/* 이전/다음 화살표 */
+.lightbox-prev,
+.lightbox-next {
+  font-size: 56px;
+  font-weight: 200;
+  padding: 0 28px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 닫기 버튼 (우측 상단 고정) */
+.lightbox-close {
+  position: absolute;
+  top: 28px;
+  right: 36px;
+  font-size: 24px;
+  opacity: 0.6;
+  z-index: 10001;
+  padding: 8px;
+}
+
+.lightbox-close:hover {
+  opacity: 1;
+}
+
+
+/* ══════════════════════════════════════════
+   푸터
+══════════════════════════════════════════ */
+.site-footer {
+  width: 100%;
+  min-height: 200px;
+  background: var(--color-bg);
+  border-top: 1px solid #e0dbd3;
+  display: flex;
+  align-items: center;
+}
+
+.footer-inner {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  /* 내비게이션 바와 동일한 좌우 패딩, 상하 여백은 넉넉하게 */
+  padding: 48px 52px;
+  gap: 40px;
+}
+
+/* 좌측 / 우측 컬럼 공통 */
+.footer-left,
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  /* 각 줄 사이 여백 */
+  gap: 10px;
+}
+
+/* 모든 footer 텍스트 기본: EloquiaText ExtraLight */
+.footer-left p,
+.footer-right p {
+  font-family: var(--font-accent);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+}
+
+/* 카페 이름만: EloquiaDisplay ExtraBold */
+.footer-brand {
+  font-family: var(--font-bold) !important;
+  font-weight: 800 !important;
+  font-size: 16px !important;
+  color: var(--color-text) !important;
+  letter-spacing: 0.02em;
+  /* 이름과 아래 소개 문구 사이 여백을 좀 더 주기 */
+  margin-bottom: 3px;
+}
+
+/* 우측 정렬 */
+.footer-right {
+  text-align: right;
+}
+
+/* 반응형: 600px 이하에서 상하 배치로 전환 */
+@media (max-width: 600px) {
+  .footer-inner {
+    justify-content: space-between;
+    padding: 36px 24px;
+    gap: 28px;
+  }
+
+  .footer-left{
+    text-align: left;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+}
+
+
+/* ══════════════════════════════════════════
+   탭 뷰 전환 (홈 ↔ 메뉴)
+   .page-view        : 기본 숨김
+   .page-view.is-active : 표시
+══════════════════════════════════════════ */
+.page-view {
+  display: none;
+}
+
+.page-view.is-active {
+  display: block;
+}
+
+/* 현재 활성 탭 nav-link 스타일 (밑줄 고정) */
+.nav-link.is-current::after {
+  width: 100%;
+}
+.nav-link.is-current {
+  opacity: 0.6;
+}
+
+
+/* ══════════════════════════════════════════
+   메뉴 페이지
+══════════════════════════════════════════ */
+.menu-page {
+  padding-top: calc(var(--nav-height) + 60px); /* 내비 높이 + 상단 여백 */
+  padding-bottom: 100px;
+  padding-left: 80px;
+  padding-right: 80px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── 메뉴판 전체 이미지 ── */
+.menu-board {
+  width: 100%;
+  margin-bottom: 80px;
+  /* 메뉴판 이미지가 크게 잘 보이도록 */
+  display: flex;
+  justify-content: center;
+}
+
+.menu-board-img {
+  width: 100%;
+  max-width: 900px;      /* ✏️ 메뉴판 이미지 최대 너비 조절 */
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── 세부 메뉴 그리드 (2열) ── */
+.menu-grid {
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 60px 80px;  /* 세로 간격 60px, 가로 간격 80px */
+}
+
+/* ── 메뉴 카드 ── */
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 메뉴 사진: 가로가 더 긴 직사각형 (4:3 비율) */
+.menu-img-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f0ece6;  /* 이미지 로드 전 배경 */
+}
+
+.menu-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.menu-card:hover .menu-img-wrap img {
+  transform: none; /* 메뉴 사진 hover scale 효과 없음 */
+}
+
+/* 메뉴 이름 */
+.menu-name {
+  font-family: var(--font-accent);   /* Helvetica Neue */
+  font-size: 20px;
+  font-weight: 600;                  /* semi-bold */
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-top: 8px;
+}
+
+/* 메뉴 설명 */
+.menu-desc {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-muted);
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+}
+
+/* 메뉴 가격 */
+.menu-price {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.00em;
+}
+
+/* 반응형: 태블릿 2열 */
+@media (max-width: 900px) {
+  .menu-page {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 24px;
+  }
+}
+
+/* 반응형: 모바일 1열 */
+@media (max-width: 480px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ══════════════════════════════════════════
+   프로그램 세부 패널
+   — .program-detail : 기본 높이 0, max-height 트랜지션으로 슬라이드다운
+   — .program-detail.is-open : 펼쳐짐
+   — padding은 .program-page와 동일한 좌우 값을 자동으로 따릅니다.
+══════════════════════════════════════════ */
+
+/* 패널 래퍼: 높이 0에서 펼쳐지는 슬라이드다운 */
+.program-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+  position: relative;         /* 닫기 버튼 기준점 */
+  margin-top: 0;
+}
+
+.program-detail.is-open {
+  max-height: 1200px;         /* 충분히 큰 값 — 실제 높이보다 크면 됩니다 */
+  margin-top: 60px;           /* 그리드와의 여백 */
+}
+
+/* 구분선: 패널 상단에 border-top */
+.program-detail::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #e0dbd3;        /* 푸터 border-top과 동일한 색상 */
+  margin-bottom: 60px;
+}
+
+/* 닫기 버튼 (우측 상단) */
+.program-detail-close {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--color-text);
+  opacity: 0.5;
+  padding: 8px;
+  transition: opacity 0.2s;
+  cursor: none;
+}
+
+.program-detail-close:hover {
+  opacity: 1;
+}
+
+/* 내용 레이아웃: 좌측 포스터 | 우측 정보, gap 80px */
+.program-detail-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+  padding-bottom: 80px;
+}
+
+/* 좌측: 포스터 이미지 */
+.program-detail-poster {
+  flex: 0 0 auto;
+  width: 300px;               /* ✏️ 포스터 너비 조절 */
+}
+
+.program-detail-poster img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* 우측: 텍스트 정보 영역 */
+.program-detail-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* 프로그램 이름 — menu-name 스타일 동일 적용 */
+.program-detail-name {
+  font-family: var(--font-accent);   /* Helvetica Neue */
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+/* 중요 정보 블록 — menu-desc 스타일 동일 적용 */
+.program-detail-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.program-detail-meta p {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-muted);
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  display: flex;
+  gap: 16px;
+}
+
+/* 정보 항목 라벨 (날짜, 참가비 등) */
+.meta-label {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  flex: 0 0 110px;            /* ✏️ 라벨 고정 너비 (내용에 따라 조절) */
+}
+
+/* 정보 항목 값 */
+.meta-value {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-muted);
+  letter-spacing: -0.02em;
+  flex: 1;
+}
+
+/* 구분선 — 중요 정보와 소개 내용 사이 */
+.program-detail-divider {
+  border: none;
+  border-top: 1px solid #e0dbd3;   /* 푸터 border-top과 동일한 색상 */
+  margin: 0 0 28px 0;
+}
+
+/* 소개 내용 — menu-desc 스타일 동일 적용 */
+.program-detail-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.program-detail-desc p {
+  font-family: var(--font-accent);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-muted);
+  line-height: 1.75;
+  letter-spacing: -0.02em;
+}
+
+/* 선택된 포스터 카드 강조 */
+.program-card.is-active .program-img-wrap {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+/* 반응형: 태블릿 이하 — 세로 배치 */
+@media (max-width: 900px) {
+  .program-detail-inner {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .program-detail-poster {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .meta-label {
+    flex: 0 0 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .program-detail.is-open {
+    margin-top: 40px;
+  }
+
+  .program-detail-name {
+    font-size: 17px;
+  }
+
+  .program-detail-meta p,
+  .meta-label,
+  .meta-value,
+  .program-detail-desc p {
+    font-size: 14px;
+  }
+
+  .meta-label {
+    flex: 0 0 80px;
+  }
+}

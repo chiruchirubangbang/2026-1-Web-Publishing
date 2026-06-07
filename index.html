@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>a.p. coffee&bakery</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================
+       커스텀 마우스 포인터
+       ✏️ 마우스 포인터 SVG 파일 경로를 id="custom-cursor"의 src에 넣으세요.
+       예시: src="ap/cursor/cursor.svg"
+  ============================= -->
+  <img id="custom-cursor" src="ap/mouse.svg" alt="" aria-hidden="true" />
+
+
+  <!-- ============================
+       사진 크게 보기 (라이트박스) 오버레이
+  ============================= -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="사진 크게 보기">
+    <!-- 닫기 버튼 (우측 상단 X) -->
+    <button class="lightbox-close" id="lightbox-close" aria-label="닫기">&#x2715;</button>
+
+    <!-- 이전 사진 버튼 -->
+    <button class="lightbox-prev" id="lightbox-prev" aria-label="이전 사진">&#8249;</button>
+
+    <!-- 사진 + 출처 -->
+    <div class="lightbox-content">
+      <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+      <!-- ✏️ 출처 텍스트: lightbox-caption은 JS에서 자동으로 채워집니다.
+           각 사진의 data-caption 속성에 출처를 적으면 여기에 표시돼요. -->
+      <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+
+    <!-- 다음 사진 버튼 -->
+    <button class="lightbox-next" id="lightbox-next" aria-label="다음 사진">&#8250;</button>
+  </div>
+
+
+  <!-- ============================
+       상단 내비게이션 바
+  ============================= -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-left">
+      <!-- ✏️ 로고 이미지 경로가 다르면 src를 수정하세요 -->
+      <a href="index.html" class="nav-logo">
+        <img src="ap/logo/symbol(vectorized).png" alt="a.p. coffee&bakery 로고" class="logo-img" />
+      </a>
+      <a href="menu.html" class="nav-link">Menu</a>
+      <a href="program.html" class="nav-link">Program</a>
+    </div>
+
+    <div class="nav-right">
+      <!-- ✏️ 인스타그램 URL -->
+      <a href="https://www.instagram.com/ap_coffee_bakery/" target="_blank" class="nav-icon" aria-label="Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <!-- ✏️ 네이버 지도 URL -->
+      <a href="https://map.naver.com/p/entry/place/1384396467?c=15.00,0,0,0,dh&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202606042121&locale=ko&svcName=map_pcv5" target="_blank" class="nav-icon" aria-label="네이버 지도">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+
+  <!-- ============================
+       홈 뷰 (기본 표시)
+  ============================= -->
+  <section id="view-home" class="page-view is-active">
+    <main class="home-gallery" id="home">
+
+      <!-- 사진 1 -->
+      <div class="gallery-item img-item item-1" data-lightbox data-caption="A.P. Coffee&Bakery / omo-studio [Archdaily]">
+        <img src="ap/interior/내부-1.jpg" alt="a.p. 카페 내부" />
+      </div>
+
+      <!-- 사진 2 -->
+      <div class="gallery-item img-item item-2" data-lightbox data-caption="A.P. Coffee&Bakery / omo-studio [Archdaily]">
+        <img src="ap/interior/내부-2.jpg" alt="a.p. 카페 내부" />
+      </div>
+
+      <!-- 사진 4 -->
+      <div class="gallery-item img-item item-4" data-lightbox data-caption="A.P. Coffee&Bakery / omo-studio [Archdaily]">
+        <img src="ap/interior/내부-4.jpg" alt="a.p. 카페 내부" />
+      </div>
+
+      <!-- 로고타입 — 라이트박스 제외 (data-lightbox 속성 없음) -->
+      <div class="gallery-item item-logotype">
+        <img src="ap/logo/logotype.png" alt="a.p. logotype" />
+      </div>
+
+      <!-- 사진 5 -->
+      <div class="gallery-item img-item item-5" data-lightbox data-caption="A.P. Coffee&Bakery / omo-studio [Archdaily]">
+        <img src="ap/interior/내부-5.jpg" alt="a.p. 카페 내부" />
+      </div>
+
+      <!-- 사진 6 -->
+      <div class="gallery-item img-item item-6" data-lightbox data-caption="A.P. Coffee&Bakery [Naver Map]">
+        <img src="ap/interior/내부-6.jpeg" alt="a.p. 카페 음료" />
+      </div>
+
+      <!-- 사진 7 -->
+      <div class="gallery-item img-item item-7" data-lightbox data-caption="A.P. Coffee&Bakery / omo-studio [Archdaily]">
+        <img src="ap/interior/내부-7.jpeg" alt="a.p. 카페 내부" />
+      </div>
+
+      <!-- 사진 8 -->
+      <div class="gallery-item img-item item-8" data-lightbox data-caption="A.P. Coffee&Bakery / omo-studio [Archdaily]">
+        <img src="ap/interior/내부-8.jpg" alt="a.p. 카페 내부" />
+      </div>
+
+      <!-- 사진 9 -->
+      <div class="gallery-item img-item item-9" data-lightbox data-caption="A.P. Coffee&Bakery / omo-studio [Archdaily]">
+        <img src="ap/interior/내부-3.jpg" alt="a.p. 카페 전경" />
+      </div>
+
+    </main>
+  </section><!-- /#view-home -->
+
+
+  <!-- ============================
+       메뉴 뷰 (MENU 탭 클릭 시 표시)
+  ============================= -->
+  <section id="view-menu" class="page-view">
+    <div class="menu-page">
+
+      <!-- ── 메뉴판 전체 이미지 ──
+           ✏️ 메뉴판 이미지 경로를 src에 입력하세요. 예: ap/menu/menuboard.jpg -->
+      <div class="menu-board">
+        <img src="ap/menu/메뉴판.jpeg" alt="a.p. 전체 메뉴판" class="menu-board-img" />
+      </div>
+
+      <!-- ── 세부 메뉴 그리드 (2열, 총 15개)
+           ✏️ 각 .menu-card의 src / 이름 / 설명 / 가격을 직접 채워넣으세요.
+           사진 비율은 가로가 더 긴 직사각형(4:3)으로 CSS에서 통일됩니다. -->
+      <!-- RECOMMENDATION 섹션 제목 -->
+      <p class="menu-section-title">Recommendation</p>
+
+      <div class="menu-grid">
+
+        <!-- 메뉴 1 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/아메리카노.jpeg" alt="아메리카노" /><!-- ✏️ 메뉴1: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">아메리카노 (Popsicle)<!-- ✏️ 메뉴1 이름 --></p>
+          <p class="menu-desc">과일향이 가득한 팝시클 원두의 아메리카노. 시그니처 커피 메뉴입니다.<!-- ✏️ 메뉴1 설명 --></p>
+          <p class="menu-price">5,000원<!-- ✏️ 메뉴1 가격 --></p>
+        </div>
+
+        <!-- 메뉴 2 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/모카클라우드.jpeg" alt="모카 클라우드" /><!-- ✏️ 메뉴2: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">모카 클라우드<!-- ✏️ 메뉴2 이름 --></p>
+          <p class="menu-desc">따뜻한 카페 모카와 차가운 생크림의 대비가 어우러진 메뉴입니다.<!-- ✏️ 메뉴2 설명 --></p>
+          <p class="menu-price">6,000원<!-- ✏️ 메뉴2 가격 --></p>
+        </div>
+
+        <!-- 메뉴 3 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/버터:소금 베이글.jpeg" alt="버터/소금 베이글" /><!-- ✏️ 메뉴3: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">버터/소금 베이글<!-- ✏️ 메뉴3 이름 --></p>
+          <p class="menu-desc">단 하나의 선택이라면? 바로 고메 버터 풍미 가득한 이 베이글이어야 합니다.<!-- ✏️ 메뉴3 설명 --></p>
+          <p class="menu-price">3,800원<!-- ✏️ 메뉴3 가격 --></p>
+        </div>
+
+        <!-- 메뉴 4 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/치즈 베이글.jpeg" alt="치즈 베이글" /><!-- ✏️ 메뉴4: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">치즈 베이글<!-- ✏️ 메뉴4 이름 --></p>
+          <p class="menu-desc">매일 아침 7시에 직접 굽는 신선하고 영양 만점의 베이글입니다.<!-- ✏️ 메뉴4 설명 --></p>
+          <p class="menu-price">3,800원<!-- ✏️ 메뉴4 가격 --></p>
+        </div>
+
+        <!-- 메뉴 5 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/프렌치 토스트.jpeg" alt="프렌치 토스트" /><!-- ✏️ 메뉴5: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">프렌치 토스트<!-- ✏️ 메뉴5 이름 --></p>
+          <p class="menu-desc">생햄과 루꼴라가 올라간 프렌치 토스트입니다. 단맛과 짠맛이 어우러진 부드러운 토스트<!-- ✏️ 메뉴5 설명 --></p>
+          <p class="menu-price">10,800원<!-- ✏️ 메뉴5 가격 --></p>
+        </div>
+
+        <!-- 메뉴 6 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/소네트 베이글 샌드위치.jpeg" alt="소네트 베이글 샌드위치" /><!-- ✏️ 메뉴6: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">소네트 베이글 샌드위치<!-- ✏️ 메뉴6 이름 --></p>
+          <p class="menu-desc">특제 소스와 햄, 하바티 치즈, 로메인, 썬드라이드 토마토가 올라간 샌드위치입니다.<!-- ✏️ 메뉴6 설명 --></p>
+          <p class="menu-price">7,800원<!-- ✏️ 메뉴6 가격 --></p>
+        </div>
+
+        <!-- 메뉴 7 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/로렌조 샌드위치.jpeg" alt="로렌조 샌드위치" /><!-- ✏️ 메뉴7: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">로렌조 샌드위치<!-- ✏️ 메뉴7 이름 --></p>
+          <p class="menu-desc">버터의 풍미와 쫀득한 식감이 일품인 프렌치 구움과자. 커피나 차와 함께 즐겨보세요.<!-- ✏️ 메뉴7 설명 --></p>
+          <p class="menu-price">8,500원<!-- ✏️ 메뉴7 가격 --></p>
+        </div>
+
+        <!-- 메뉴 8 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/짐봉뵈르 베이글.png" alt="잠봉뵈르 베이글" /><!-- ✏️ 메뉴8: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">잠봉뵈르 베이글<!-- ✏️ 메뉴8 이름 --></p>
+          <p class="menu-desc">프랑스 구르메의 잠봉햄과 이즈니 발효버터가 들어간 잠봉뵈르 베이글입니다.<!-- ✏️ 메뉴8 설명 --></p>
+          <p class="menu-price">8,500원<!-- ✏️ 메뉴8 가격 --></p>
+        </div>
+
+        <!-- 메뉴 9 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/플레인 베이글.jpeg" alt="플레인 베이글" /><!-- ✏️ 메뉴9: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">플레인 베이글<!-- ✏️ 메뉴9 이름 --></p>
+          <p class="menu-desc">매일 아침 7시에 직접 굽는 신선하고 영양 만점의 베이글입니다.<!-- ✏️ 메뉴9 설명 --></p>
+          <p class="menu-price">3,200원<!-- ✏️ 메뉴9 가격 --></p>
+        </div>
+
+        <!-- 메뉴 10 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/감자:치즈 베이글.jpeg" alt="감자/치즈 베이글" /><!-- ✏️ 메뉴10: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">감자/치즈 베이글<!-- ✏️ 메뉴10 이름 --></p>
+          <p class="menu-desc">매일 아침 7시에 직접 굽는 신선하고 영양 만점의 베이글입니다.<!-- ✏️ 메뉴10 설명 --></p>
+          <p class="menu-price">4,000원<!-- ✏️ 메뉴10 가격 --></p>
+        </div>
+
+        <!-- 메뉴 11 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/초코 베이글.jpeg" alt="초코 베이글" /><!-- ✏️ 메뉴11: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">초코 베이글<!-- ✏️ 메뉴11 이름 --></p>
+          <p class="menu-desc">매일 아침 7시에 직접 굽는 신선하고 영양 만점의 베이글입니다.<!-- ✏️ 메뉴11 설명 --></p>
+          <p class="menu-price">3,800원<!-- ✏️ 메뉴11 가격 --></p>
+        </div>
+
+        <!-- 메뉴 12 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/명란 베이글.jpeg" alt="명란 베이글" /><!-- ✏️ 메뉴12: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">명란 베이글<!-- ✏️ 메뉴12 이름 --></p>
+          <p class="menu-desc">매일 아침 7시에 직접 굽는 신선하고 영양 만점의 베이글입니다.<!-- ✏️ 메뉴12 설명 --></p>
+          <p class="menu-price">4,000원<!-- ✏️ 메뉴12 가격 --></p>
+        </div>
+
+        <!-- 메뉴 13 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/두바이 쫀득 쿠키.jpeg" alt="두바이 쫀득 쿠키" /><!-- ✏️ 메뉴13: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">두바이 쫀득 쿠키<!-- ✏️ 메뉴13 이름 --></p>
+          <p class="menu-desc">매일 피스타치오 생물 100%로 직접 만드는, 크리스피한 질감의 두쫀쿠입니다.<!-- ✏️ 메뉴13 설명 --></p>
+          <p class="menu-price">5,800원<!-- ✏️ 메뉴13 가격 --></p>
+        </div>
+
+        <!-- 메뉴 14 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/르뱅 쿠키.jpeg" alt="르뱅 쿠키" /><!-- ✏️ 메뉴14: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">르뱅 쿠키<!-- ✏️ 메뉴14 이름 --></p>
+          <p class="menu-desc">뉴욕 르뱅 베이커리 스타일로 만든 쿠키. 아낌없는 재료 투입으로 든든하고 맛있는 쿠키<!-- ✏️ 메뉴14 설명 --></p>
+          <p class="menu-price">3,500원<!-- ✏️ 메뉴14 가격 --></p>
+        </div>
+
+        <!-- 메뉴 15 ✏️ -->
+        <div class="menu-card">
+          <div class="menu-img-wrap">
+            <img src="ap/menu/에그마요:포테이토 베이글 샌드위치.jpeg" alt="에그마요/포테이토 베이글 샌드위치" /><!-- ✏️ 메뉴15: src="경로", alt="이름" -->
+          </div>
+          <p class="menu-name">에그마요/포테이토 베이글 샌드위치<!-- ✏️ 메뉴15 이름 --></p>
+          <p class="menu-desc">쫄깃하게 구운 베이글 사이에 부드러운 에그마요와 고소한 포테이토 샐러드를 듬뿍 담았습니다.<!-- ✏️ 메뉴15 설명 --></p>
+          <p class="menu-price">6,500원<!-- ✏️ 메뉴15 가격 --></p>
+        </div>
+
+      </div><!-- /.menu-grid -->
+    </div><!-- /.menu-page -->
+  </section><!-- /#view-menu -->
+
+
+  <!-- ============================
+       프로그램 뷰 (PROGRAM 탭 클릭 시 표시)
+  ============================= -->
+  <section id="view-program" class="page-view">
+    <div class="program-page">
+
+      <!-- ── 포스터 그리드 (3열) ──
+           포스터를 클릭하면 아래 .program-detail 패널이 슬라이드다운으로 열립니다.
+           data-program-trigger 값이 <template id="program-data-N">과 매핑됩니다. -->
+      <div class="program-grid">
+
+        <!-- 프로그램 1 -->
+        <!-- ✏️ 포스터1 이미지 경로를 src에 입력하세요. -->
+        <div class="program-card" data-program="1" data-program-trigger="1">
+          <div class="program-img-wrap">
+            <img src="ap/program/무관심성.jpg" alt="무관심성 (無關心性, Disinterestedness)" />
+          </div>
+        </div>
+
+        <!-- 프로그램 2 -->
+        <!-- ✏️ 포스터2 이미지 경로를 src에 입력하세요. -->
+        <div class="program-card" data-program="2" data-program-trigger="2">
+          <div class="program-img-wrap">
+            <img src="ap/program/중고 레코드 판매.jpg" alt="중고 레코드 판매" />
+          </div>
+        </div>
+
+        <!-- 프로그램 3 -->
+        <!-- ✏️ 포스터3 이미지 경로를 src에 입력하세요. -->
+        <div class="program-card" data-program="3" data-program-trigger="3">
+          <div class="program-img-wrap">
+            <img src="ap/program/류이치 사카모토.jpg" alt="류이치 사카모토 : 말년의 양식" />
+          </div>
+        </div>
+
+      </div><!-- /.program-grid -->
+
+
+      <!-- ══════════════════════════════════════════
+           프로그램 세부 패널
+           — 포스터 클릭 시 그리드 바로 아래 슬라이드다운으로 열림
+           — JS가 .is-open 클래스를 토글합니다.
+           — 닫기: 우측 상단 × 버튼, 또는 같은 포스터 재클릭
+      ══════════════════════════════════════════ -->
+      <div class="program-detail" id="program-detail" aria-hidden="true">
+
+        <!-- 닫기 버튼 (우측 상단 고정) -->
+        <button class="program-detail-close" id="program-detail-close" aria-label="닫기">&#x2715;</button>
+
+        <!-- 내용 레이아웃: 좌측 포스터 | 우측 텍스트 정보 -->
+        <div class="program-detail-inner">
+
+          <!-- 좌측: 포스터 이미지 (JS가 src/alt를 자동으로 채움) -->
+          <div class="program-detail-poster">
+            <img id="program-detail-img" src="" alt="" />
+          </div>
+
+          <!-- 우측: 텍스트 정보 -->
+          <div class="program-detail-info">
+
+            <!-- 프로그램 이름 (JS가 data-program-name 값으로 자동 채움) -->
+            <h2 class="program-detail-name" id="program-detail-name"></h2>
+
+            <!-- 중요 정보: 날짜·참가비·정원·신청방법 등 (JS가 자동 채움) -->
+            <div class="program-detail-meta" id="program-detail-meta"></div>
+
+            <!-- 구분선 — 중요 정보와 소개 내용 사이 -->
+            <hr class="program-detail-divider" />
+
+            <!-- 프로그램 소개 내용 (JS가 자동 채움) -->
+            <div class="program-detail-desc" id="program-detail-desc"></div>
+
+          </div><!-- /.program-detail-info -->
+        </div><!-- /.program-detail-inner -->
+      </div><!-- /.program-detail -->
+
+    </div><!-- /.program-page -->
+  </section><!-- /#view-program -->
+
+
+  <!-- ══════════════════════════════════════════
+       프로그램별 데이터 템플릿 (화면에 보이지 않음)
+       ✏️ 각 프로그램의 내용을 아래에서 직접 채워넣으세요.
+
+       속성 설명:
+         data-program-name    : 프로그램 이름 (텍스트)
+         data-program-img     : 포스터 이미지 경로 (program-card img src와 동일하게)
+         data-program-img-alt : 포스터 이미지 alt 텍스트
+         data-program-meta    : 날짜·참가비·정원·신청방법 등 중요 정보
+                                p 태그 사용 가능, meta-label / meta-value 클래스로 스타일링
+         data-program-desc    : 프로그램 소개 본문 (p 태그 사용 가능, 여러 문단 가능)
+
+       ⚠️ 속성 값 안에 쌍따옴표(")가 필요하면 &quot; 로 바꿔 쓰세요.
+  ══════════════════════════════════════════ -->
+
+  <!-- 프로그램 1 데이터 ✏️ -->
+  <template id="program-data-1"
+    data-program-name="무관심성 (無關心性, Disinterestedness)"
+    data-program-img="ap/program/무관심성.jpg"
+    data-program-img-alt="무관심성 포스터"
+    data-program-meta="
+      &lt;p&gt;&lt;span class='meta-label'&gt;진행 날짜&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 날짜를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;참가비&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 참가비를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;모집 정원&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 정원을 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;신청 및 문의&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 신청방법·문의처를 입력하세요&lt;/span&gt;&lt;/p&gt;
+    "
+    data-program-desc="&lt;p&gt;✏️ 프로그램 1의 소개 내용을 입력하세요.&lt;/p&gt;"
+  ></template>
+
+  <!-- 프로그램 2 데이터 ✏️ -->
+  <template id="program-data-2"
+    data-program-name="중고 레코드 판매"
+    data-program-img="ap/program/중고 레코드 판매.jpg"
+    data-program-img-alt="중고 레코드 판매 포스터"
+    data-program-meta="
+      &lt;p&gt;&lt;span class='meta-label'&gt;진행 날짜&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 날짜를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;참가비&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 참가비를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;모집 정원&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 정원을 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;신청 및 문의&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 신청방법·문의처를 입력하세요&lt;/span&gt;&lt;/p&gt;
+    "
+    data-program-desc="&lt;p&gt;✏️ 프로그램 2의 소개 내용을 입력하세요.&lt;/p&gt;"
+  ></template>
+
+  <!-- 프로그램 3 데이터 ✏️ -->
+  <template id="program-data-3"
+    data-program-name="류이치 사카모토 : 말년의 양식"
+    data-program-img="ap/program/류이치 사카모토.jpg"
+    data-program-img-alt="류이치 사카모토 포스터"
+    data-program-meta="
+      &lt;p&gt;&lt;span class='meta-label'&gt;진행 날짜&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 날짜를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;참가비&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 참가비를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;모집 정원&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 정원을 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;신청 및 문의&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 신청방법·문의처를 입력하세요&lt;/span&gt;&lt;/p&gt;
+    "
+    data-program-desc="&lt;p&gt;✏️ 프로그램 3의 소개 내용을 입력하세요.&lt;/p&gt;"
+  ></template>
+
+    <!-- ============================
+       푸터
+  ============================= -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <!-- 좌측: 브랜드 정보 -->
+      <div class="footer-left">
+        <!-- 카페 이름: EloquiaDisplay ExtraBold 적용 -->
+        <p class="footer-brand">A.P. Coffee&amp;Bakery</p>
+        <!-- 소개 문구, 영업 시간: EloquiaText ExtraLight 적용 -->
+        <p class="footer-tagline">집중과 휴식이 공존하는 완벽한 공간</p>
+        <p class="footer-hours">주중 11:00 - 23:00<br>주말 11:00 - 22:00</p>
+      </div>
+
+      <!-- 우측: 연락처 & 주소 -->
+      <div class="footer-right">
+        <p class="footer-tel">070-4245-8808</p>
+        <p class="footer-address">경기 안산시 상록구 한양대학로 60<br>한양타운 2층 201호, 202호</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
