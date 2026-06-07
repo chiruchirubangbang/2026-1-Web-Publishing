@@ -249,24 +249,32 @@ switchView('view-home', document.querySelector('.nav-link[href="index.html"]'));
 
 
 /* ──────────────────────────────────────────
-   8. 프로그램 세부 패널
+   8. 프로그램 세부 페이지 (별도 뷰 이동)
    ─ 포스터(.program-card[data-program-trigger])를 클릭하면
-     그리드 아래 .program-detail 패널이 슬라이드다운으로 열립니다.
+     그리드 뷰(#view-program) 대신 #view-program-detail 뷰로 이동합니다.
    ─ 데이터는 <template id="program-data-N"> 요소의 data-* 속성에서 읽어옵니다.
-   ─ 같은 포스터 재클릭 → 패널 닫기 / 다른 포스터 클릭 → 내용 교체하며 열기
-   ─ 닫기 버튼(×) 클릭으로도 닫을 수 있습니다.
+   ─ '← 목록으로' 버튼을 누르면 다시 포스터 그리드로 돌아갑니다.
 ────────────────────────────────────────── */
-const programDetail      = document.getElementById('program-detail');
-const programDetailClose = document.getElementById('program-detail-close');
-const programDetailImg   = document.getElementById('program-detail-img');
-const programDetailName  = document.getElementById('program-detail-name');
-const programDetailMeta  = document.getElementById('program-detail-meta');
-const programDetailDesc  = document.getElementById('program-detail-desc');
+const programDetailImg  = document.getElementById('program-detail-img');
+const programDetailName = document.getElementById('program-detail-name');
+const programDetailMeta = document.getElementById('program-detail-meta');
+const programDetailDesc = document.getElementById('program-detail-desc');
+const programDetailBack = document.getElementById('program-detail-back');
 
-// 현재 열려 있는 프로그램 번호 추적 (닫혀 있으면 null)
-let openProgramId = null;
+// Program 탭 nav-link — 세부 페이지에서도 'Program'을 현재 탭으로 유지하기 위해 사용
+const programNavLink = document.querySelector('.nav-link[href="program.html"]');
 
-/* 패널 열기 / 내용 교체 */
+/* HTML 엔티티(&lt; &gt;)를 실제 HTML 태그로 복원하는 헬퍼 */
+function unescapeHtml(str) {
+  return str
+    .replace(/&lt;/g,  '<')
+    .replace(/&gt;/g,  '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .trim();
+}
+
+/* 세부 페이지 내용 채우고 해당 뷰로 이동 */
 function openProgramDetail(id) {
   const tmpl = document.getElementById('program-data-' + id);
   if (!tmpl) return;
@@ -280,75 +288,25 @@ function openProgramDetail(id) {
   // 프로그램 이름
   programDetailName.textContent = d.programName || '';
 
-  // 중요 정보: data-program-meta 속성값을 innerHTML로 주입
-  // ✏️ template 태그의 data-program-meta 속성에 &lt;p&gt;...&lt;/p&gt; 형식으로 입력하면
-  //    여기서 자동으로 실제 HTML로 변환되어 표시됩니다.
+  // 중요 정보 / 소개 내용: data-* 속성값(&lt;p&gt;...&lt;/p&gt;)을 실제 HTML로 변환해 주입
   programDetailMeta.innerHTML = unescapeHtml(d.programMeta || '');
-
-  // 소개 내용: 마찬가지로 innerHTML로 주입
   programDetailDesc.innerHTML = unescapeHtml(d.programDesc || '');
 
-  // 패널 열기 (is-open 클래스 → CSS max-height 트랜지션)
-  programDetail.classList.add('is-open');
-  programDetail.setAttribute('aria-hidden', 'false');
-
-  // 패널이 열린 후 스크롤하여 보이게
-  setTimeout(() => {
-    programDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 80);
-
-  openProgramId = id;
-
-  // 선택된 포스터 카드에 is-active 클래스 (테두리 강조)
-  document.querySelectorAll('.program-card').forEach(card => {
-    card.classList.toggle('is-active', card.dataset.programTrigger === id);
-  });
+  // 별도 뷰로 전환 (switchView는 위 7번 섹션에 정의되어 있음)
+  // 두 번째 인자로 Program 링크를 넘겨 'Program' 탭을 현재 탭으로 표시
+  switchView('view-program-detail', programNavLink);
 }
 
-/* 패널 닫기 */
-function closeProgramDetail() {
-  programDetail.classList.remove('is-open');
-  programDetail.setAttribute('aria-hidden', 'true');
-  openProgramId = null;
-
-  document.querySelectorAll('.program-card').forEach(card => {
-    card.classList.remove('is-active');
-  });
-}
-
-/* HTML 엔티티(&lt; &gt;)를 실제 HTML 태그로 복원하는 헬퍼 */
-function unescapeHtml(str) {
-  return str
-    .replace(/&lt;/g,  '<')
-    .replace(/&gt;/g,  '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .trim();
-}
-
-/* 포스터 카드 클릭 이벤트 */
+/* 포스터 카드 클릭 → 세부 페이지로 이동 */
 document.querySelectorAll('[data-program-trigger]').forEach(card => {
   card.addEventListener('click', () => {
-    const id = card.dataset.programTrigger;
-    if (openProgramId === id) {
-      // 같은 포스터 재클릭 → 닫기
-      closeProgramDetail();
-    } else {
-      openProgramDetail(id);
-    }
+    openProgramDetail(card.dataset.programTrigger);
   });
 });
 
-/* 닫기 버튼 */
-if (programDetailClose) {
-  programDetailClose.addEventListener('click', closeProgramDetail);
-}
-
-/* 프로그램 탭 재진입 시 패널 초기화
-   (다른 탭 갔다가 돌아왔을 때 패널이 열린 채로 남지 않도록) */
-const programNavLink = document.querySelector('.nav-link[href="program.html"]');
-if (programNavLink) {
-  programNavLink.addEventListener('click', () => {
-    closeProgramDetail();
+/* '← 목록으로' 버튼 → 포스터 그리드 뷰로 복귀 */
+if (programDetailBack) {
+  programDetailBack.addEventListener('click', () => {
+    switchView('view-program', programNavLink);
   });
 }
