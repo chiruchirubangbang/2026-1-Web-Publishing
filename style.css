@@ -1087,7 +1087,7 @@ a {
   font-size: 13px;
   color: var(--color-muted);
   line-height: 1.6;
-  letter-spacing: 0.03em;
+  letter-spacing: -0.02em;
 }
 
 /* 카페 이름만: EloquiaDisplay ExtraBold */
@@ -1175,11 +1175,11 @@ a {
   display: block;
 }
 
-/* ── 세부 메뉴 그리드 (2열) ── */
+/* ── 세부 메뉴 그리드 (3열) ── */
 .menu-grid {
   display: grid;
   align-items: flex-start;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 60px 80px;  /* 세로 간격 60px, 가로 간격 80px */
 }
 
@@ -1187,7 +1187,7 @@ a {
 .menu-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 /* 메뉴 사진: 가로가 더 긴 직사각형 (4:3 비율) */
@@ -1213,17 +1213,17 @@ a {
 /* 메뉴 이름 */
 .menu-name {
   font-family: var(--font-accent);   /* Helvetica Neue */
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;                  /* semi-bold */
   color: var(--color-text);
   letter-spacing: -0.02em;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 /* 메뉴 설명 */
 .menu-desc {
   font-family: var(--font-accent);
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--color-muted);
   line-height: 1.6;
@@ -1233,10 +1233,9 @@ a {
 /* 메뉴 가격 */
 .menu-price {
   font-family: var(--font-accent);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-text);
-  letter-spacing: 0.00em;
 }
 
 /* 반응형: 태블릿 2열 */
@@ -1260,53 +1259,39 @@ a {
 
 
 /* ══════════════════════════════════════════
-   프로그램 세부 패널
-   — .program-detail : 기본 높이 0, max-height 트랜지션으로 슬라이드다운
-   — .program-detail.is-open : 펼쳐짐
-   — padding은 .program-page와 동일한 좌우 값을 자동으로 따릅니다.
+   프로그램 세부 페이지 (#view-program-detail)
+   — 포스터 클릭 시 그리드 대신 표시되는 별도 뷰
+   — .program-page 래퍼를 그대로 사용해 좌우 padding(80px) 동일 적용
+   — 좌측 포스터 | 우측 정보, 그 사이 구분선 → 아래 규칙 그대로 유지
 ══════════════════════════════════════════ */
 
-/* 패널 래퍼: 높이 0에서 펼쳐지는 슬라이드다운 */
+/* 세부 내용 래퍼 (슬라이드다운 X → 일반 블록) */
 .program-detail {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.55s cubic-bezier(0.76, 0, 0.24, 1);
-  position: relative;         /* 닫기 버튼 기준점 */
-  margin-top: 0;
+  position: relative;
 }
 
-.program-detail.is-open {
-  max-height: 1200px;         /* 충분히 큰 값 — 실제 높이보다 크면 됩니다 */
-  margin-top: 60px;           /* 그리드와의 여백 */
-}
-
-/* 구분선: 패널 상단에 border-top */
-.program-detail::before {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 1px;
-  background: #e0dbd3;        /* 푸터 border-top과 동일한 색상 */
-  margin-bottom: 60px;
-}
-
-/* 닫기 버튼 (우측 상단) */
-.program-detail-close {
-  position: absolute;
-  top: 20px;
-  right: 0;
+/* '← 목록으로' 버튼 — 포스터 그리드로 돌아가기 */
+.program-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: none;
   border: none;
-  font-size: 20px;
-  color: var(--color-text);
-  opacity: 0.5;
-  padding: 8px;
-  transition: opacity 0.2s;
+  font-family: var(--font-accent);   /* Helvetica Neue */
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-muted);
+  letter-spacing: -0.02em;
+  padding: 0;
+  margin-bottom: 48px;               /* ✏️ 버튼과 본문 사이 여백 조절 */
+  opacity: 0.8;
+  transition: opacity 0.2s, color 0.2s;
   cursor: none;
 }
 
-.program-detail-close:hover {
+.program-detail-back:hover {
   opacity: 1;
+  color: var(--color-text);
 }
 
 /* 내용 레이아웃: 좌측 포스터 | 우측 정보, gap 80px */
@@ -1412,12 +1397,6 @@ a {
   letter-spacing: -0.02em;
 }
 
-/* 선택된 포스터 카드 강조 */
-.program-card.is-active .program-img-wrap {
-  outline: 2px solid var(--color-text);
-  outline-offset: 3px;
-}
-
 /* 반응형: 태블릿 이하 — 세로 배치 */
 @media (max-width: 900px) {
   .program-detail-inner {
@@ -1436,10 +1415,6 @@ a {
 }
 
 @media (max-width: 480px) {
-  .program-detail.is-open {
-    margin-top: 40px;
-  }
-
   .program-detail-name {
     font-size: 17px;
   }

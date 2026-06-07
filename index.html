@@ -309,7 +309,7 @@
     <div class="program-page">
 
       <!-- ── 포스터 그리드 (3열) ──
-           포스터를 클릭하면 아래 .program-detail 패널이 슬라이드다운으로 열립니다.
+           포스터를 클릭하면 별도의 '프로그램 세부 페이지'(#view-program-detail)로 이동합니다.
            data-program-trigger 값이 <template id="program-data-N">과 매핑됩니다. -->
       <div class="program-grid">
 
@@ -339,19 +339,25 @@
 
       </div><!-- /.program-grid -->
 
+    </div><!-- /.program-page -->
+  </section><!-- /#view-program -->
 
-      <!-- ══════════════════════════════════════════
-           프로그램 세부 패널
-           — 포스터 클릭 시 그리드 바로 아래 슬라이드다운으로 열림
-           — JS가 .is-open 클래스를 토글합니다.
-           — 닫기: 우측 상단 × 버튼, 또는 같은 포스터 재클릭
-      ══════════════════════════════════════════ -->
-      <div class="program-detail" id="program-detail" aria-hidden="true">
 
-        <!-- 닫기 버튼 (우측 상단 고정) -->
-        <button class="program-detail-close" id="program-detail-close" aria-label="닫기">&#x2715;</button>
+  <!-- ============================
+       프로그램 세부 페이지 (별도 뷰)
+       — 포스터 클릭 시 그리드 뷰(#view-program) 대신 이 뷰가 표시됩니다.
+       — '← 목록으로' 버튼을 누르면 다시 포스터 그리드로 돌아갑니다.
+       — 내용(이미지/이름/정보/소개)은 JS가 <template id="program-data-N">에서 읽어와 채웁니다.
+  ============================= -->
+  <section id="view-program-detail" class="page-view">
+    <!-- program-page 래퍼 재사용 → 메뉴/그리드와 동일한 좌우 padding(80px) 적용 -->
+    <div class="program-page">
 
-        <!-- 내용 레이아웃: 좌측 포스터 | 우측 텍스트 정보 -->
+      <!-- 목록으로 돌아가기 버튼 -->
+      <button class="program-detail-back" id="program-detail-back" aria-label="목록으로 돌아가기">&#8249; 목록으로</button>
+
+      <!-- 세부 내용: 좌측 포스터 | 우측 텍스트 정보 (그 사이 gap 80px) -->
+      <div class="program-detail" id="program-detail">
         <div class="program-detail-inner">
 
           <!-- 좌측: 포스터 이미지 (JS가 src/alt를 자동으로 채움) -->
@@ -365,13 +371,15 @@
             <!-- 프로그램 이름 (JS가 data-program-name 값으로 자동 채움) -->
             <h2 class="program-detail-name" id="program-detail-name"></h2>
 
-            <!-- 중요 정보: 날짜·참가비·정원·신청방법 등 (JS가 자동 채움) -->
+            <!-- 중요 정보: 진행 날짜·참가비·모집 정원·신청 및 문의 등
+                 ✏️ 내용은 아래 <template>의 data-program-meta 속성에서 채웁니다. -->
             <div class="program-detail-meta" id="program-detail-meta"></div>
 
-            <!-- 구분선 — 중요 정보와 소개 내용 사이 -->
+            <!-- 구분선 — '이름·중요 정보'와 '소개 내용'을 구분 (footer border-top과 동일한 #e0dbd3) -->
             <hr class="program-detail-divider" />
 
-            <!-- 프로그램 소개 내용 (JS가 자동 채움) -->
+            <!-- 프로그램 소개 내용
+                 ✏️ 내용은 아래 <template>의 data-program-desc 속성에서 채웁니다. -->
             <div class="program-detail-desc" id="program-detail-desc"></div>
 
           </div><!-- /.program-detail-info -->
@@ -379,7 +387,7 @@
       </div><!-- /.program-detail -->
 
     </div><!-- /.program-page -->
-  </section><!-- /#view-program -->
+  </section><!-- /#view-program-detail -->
 
 
   <!-- ══════════════════════════════════════════
@@ -399,44 +407,149 @@
 
   <!-- 프로그램 1 데이터 ✏️ -->
   <template id="program-data-1"
-    data-program-name="무관심성 (無關心性, Disinterestedness)"
+    data-program-name="[전시] 무관심성 (無關心性, Disinterestedness)"
     data-program-img="ap/program/무관심성.jpg"
     data-program-img-alt="무관심성 포스터"
     data-program-meta="
-      &lt;p&gt;&lt;span class='meta-label'&gt;진행 날짜&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 날짜를 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;참가비&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 참가비를 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;모집 정원&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 정원을 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;신청 및 문의&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 신청방법·문의처를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;날짜&lt;/span&gt;&lt;span class='meta-value'&gt;2026. 04. 16. - 2026. 05. 22.&lt;/span&gt;&lt;/p&gt;
     "
-    data-program-desc="&lt;p&gt;✏️ 프로그램 1의 소개 내용을 입력하세요.&lt;/p&gt;"
+    data-program-desc="&lt;p&gt;무관심성[명사]: 대상의 실용적 유용성이나 소유욕 등 모든 이해관계를 배제하고, 오직 대상의 내재적 형식 그 자체를 마주하는 상태. 대상이 ‘무엇을 위해 존재하는가’가 아닌, ‘그 자체로 어떻게 존재하는가’에 집중하는 태도를 의미한다.&lt;p&gt;
+
+효율과 기능이 보편적 전제가 된 환경에서 디자인은 흔히 목적 수행을 위한 도구로 정의됩니다. 이러한 흐름 속에서 시각적 결과물은 지표나 성과로 치환되며, 우리의 시선은 대상 그 자체보다 그것이 가져올 효용에 먼저 머물게 됩니다. 이번 전시는 이러한 도구적 관점에서 벗어나 임마누엘 칸트가 제시한 ‘무관심성’의 태도로 사물을 응시하려는 시도입니다.
+
+칸트의 담론에서 무관심성은 대상을 판단하는 주체의 사적인 욕망을 소거했을 때 도달하는 상태입니다. ”이것이 나에게 어떤 이득을 주는가“라는 질문이 멈추는 지점에서 비로소 대상의 조형적 본질이 드러나기 때문입니다. 이러한 관점에서 진정한 감상이란 대상의 기능이나 자극에 반응하는 것이 아닌, 대상의 형식을 투명하게 마주하는 일에 가깝습니다. 이번 전시는 이러한 태도를 바탕으로 실용적 쓰임이나 외부의 시선에서 벗어나 각자가 아름답다고 믿는 본질에 집중하여 기록한 결과물들을 보여 줍니다.
+
+전시의 모든 작업들은 디자인이 수행해야 하는 기능적 맥락을 걷어내고 창작자가 마주한 시각적 대상 그 자체에 머물러본 흔적들입니다. 관객 여러분 또한 일상의 이해관계를 잠시 유보한 채 전시장에 펼쳐진 각기 다른 시각적 형태를 마주하시길 바랍니다. 어떠한 전제 없이 대상을 응시하는 무관심성의 시간을 통해 사물이 그 자체로 존재하는 방식에 온전히 머물러 보는 경험이 되기를 기대합니다.&lt;/p&gt;"
   ></template>
 
   <!-- 프로그램 2 데이터 ✏️ -->
   <template id="program-data-2"
-    data-program-name="중고 레코드 판매"
+    data-program-name="중고 레코드 판매 Classic, Pop, Jazz"
     data-program-img="ap/program/중고 레코드 판매.jpg"
     data-program-img-alt="중고 레코드 판매 포스터"
     data-program-meta="
-      &lt;p&gt;&lt;span class='meta-label'&gt;진행 날짜&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 날짜를 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;참가비&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 참가비를 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;모집 정원&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 정원을 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;신청 및 문의&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 신청방법·문의처를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;날짜&lt;/span&gt;&lt;span class='meta-value'&gt;2025. 10. 08. - 2025. 10. 09.&lt;/span&gt;&lt;/p&gt;
     "
-    data-program-desc="&lt;p&gt;✏️ 프로그램 2의 소개 내용을 입력하세요.&lt;/p&gt;"
+    data-program-desc="&lt;p&gt;무라카미 하루키의 책 중에
+<오래되고 멋진 클래식 레코드>라는
+책이 있습니다.
+재즈 팬으로 알려진 하루키가
+자신이 모은 클래식 레코드에 대해서
+쓴 책입니다. 무려 2권이 나올 정도로
+인기가 있었습니다.&lt;p&gt;
+
+제가 <오래되고 멋진 클래식 레코드>를
+읽고 가장 놀랐던 것은 이거였습니다.
+세계에서 제일 잘팔리는 작가 중에 한 명인
+하루키이니 수중에 돈이 없는 것도 아닐텐데
+책에 실린 레코드들은 한결같이
+1000-3000엔 사이, 우리돈으로 치면
+만원에서 3만원짜리 저렴한 중고 LP들이었습니다.
+마치 ‘나는 클레식 레코드에는 3만원 이상은
+쓰지 않겠어’라는 다짐을 한 사람처럼 말입니다.&lt;p&gt;
+
+클래식 레코드라면 초판본은 상태에 따라서
+수천 수백을 호가하는 것도 있고,
+애호가들 사이에서 인기가 높은 수십만원짜리
+레코드들도 즐비합니다.
+그런데 세계에서 가장 부유한 소설가(?) 중
+한 명인 무라카미 하루키는 그런 레코드는
+절대 쳐다보지 않고 1-3만원 정도의 저렴한
+중고 레코드만으로 자신의 클래식 취향을
+드러내고 있는 것입니다.
+문제는 안목이지, 가격이 아닌 것입니다.
+(물론 하루키도 재즈 레코드는 비싼 거 사겠지요)&lt;p&gt;
+
+연휴의 마지막 이틀 동안
+수요일과 목요일 12시-8시까지
+A.P.에서 중고 음반을 판매합니다.
+많은 양은 아니지만
+제가 직접 모은 좋은 음반들입니다.
+중고 음반들은 모두 제가 직접 세척하고
+보관속지도 깨끗한 것으로 바꾸었습니다.&lt;p&gt;
+
+70% 클래식이고, 30% 팝, 재즈입니다.
+중고 클래식 대부분은 1-3만원 사이이고
+팝, 재즈는 2-4만원 사이입니다.
+물론 신품도 있습니다. 가격은 신품가격에 준하고
+높은 가격의 한정반이나 희귀반도 있습니다.&lt;p&gt;
+
+오셔서 말씀해주시면 추천도 해드립니다.
+10만원에 10장-5장을 고르실 수도 있고
+1장을 사실 수도 있을 겁니다.
+진짜 오래된 레코드의 먼지를 걷어내면
+(이건 제가 걷어드렸습니다)
+아름다움을 만나실 수 있을 겁니다.&lt;p&gt;
+
+나는 턴테이블이 없어 하시는 분들도
+망설이지 마세요.
+원래 LP 레코드 사다가 턴테이블 사는 겁니다.
+턴테이블은 언제든지 살 수 있지만
+레코드는 지금 내 눈 앞에 있을 때
+구하지 않으면 다시 만나기 어려운
+경우가 대부분입니다.&lt;p&gt;
+
+특히 클래식 처음 들으시는 분들,
+클래식 들어보고 싶다 하시는 분들은
+이 기회를 놓치지 마시기 바랍니다.
+많은 관심과 참여 부탁드립니다.
+감사합니다.&lt;/p&gt;"
   ></template>
 
   <!-- 프로그램 3 데이터 ✏️ -->
   <template id="program-data-3"
-    data-program-name="류이치 사카모토 : 말년의 양식"
+    data-program-name="[음악감상회] 류이치 사카모토 : 말년의 양식"
     data-program-img="ap/program/류이치 사카모토.jpg"
     data-program-img-alt="류이치 사카모토 포스터"
     data-program-meta="
-      &lt;p&gt;&lt;span class='meta-label'&gt;진행 날짜&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 날짜를 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;참가비&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 참가비를 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;모집 정원&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 정원을 입력하세요&lt;/span&gt;&lt;/p&gt;
-      &lt;p&gt;&lt;span class='meta-label'&gt;신청 및 문의&lt;/span&gt;&lt;span class='meta-value'&gt;✏️ 신청방법·문의처를 입력하세요&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;일시&lt;/span&gt;&lt;span class='meta-value'&gt;2025년 2월 21일(금) 밤 8시 (2시간 예정)&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;참가비&lt;/span&gt;&lt;span class='meta-value'&gt;10,000원&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;모집 정원&lt;/span&gt;&lt;span class='meta-value'&gt;40명 (선착순)&lt;/span&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;span class='meta-label'&gt;신청 및 문의&lt;/span&gt;&lt;span class='meta-value'&gt;카운터 및 인스타그램&lt;/span&gt;&lt;/p&gt;
     "
-    data-program-desc="&lt;p&gt;✏️ 프로그램 3의 소개 내용을 입력하세요.&lt;/p&gt;"
+    data-program-desc="&lt;p&gt;최근에 류이치 사카모토의 음반을
+다시 듣게 되었습니다.
+천천히 듣다보니 제가 오해하고 있는 부분이
+많았구나, 하는 생각이 들더군요.
+에이피 첫 음악감상회가
+류이치 사카모토였는데
+열번째를 맞이하는 시점에서,
+다른 시각에서 그를 재조명하는 감상회를
+가져도 좋을 거라는 생각을 하게 되었습니다.&lt;p&gt;
+
+특히 에드워드 사이드가 말한 ’말년의 양식‘
+의 관점에서 그의 말년 작업들을
+바라보려고 합니다.
+지금 돌아보면 그가 시한부 판정을 받고
+남은 자신의 시간과 삶을 마무리하는데
+많은 준비를 한 것이 선명하게 보입니다.
+물론 단순히 죽음과 직면했다는 이유로
+말년의 양식이 완성되는 것은 아닙니다.&lt;p&gt;
+
+그러나 아도르노가 말한 것처럼
+예술가의 말년에서 튀어오르는
+’망명‘의 순간이나
+’작품의 텅 빈 내부를 밖으로 드러내는 주관‘을
+류이치 사카모토의 말년의 작품에서
+만나볼 수 있는 것은 사실입니다.
+이처럼 그의 후가 작품을 이해하고 감상하는데
+있어서 ’말년의 양식‘이라는 개념이 좋은
+길잡이가 되어줄 것이라고 생각합니다.&lt;p&gt;
+
+특히 그가 말년에 천착해온 작업의 방법,
+다시 작업하고, 다시 모델링하고,
+다시 연주하는
+rework, remodel, replay된 작업들을
+통해서 그의 말년성을 살펴보려고 합니다.&lt;p&gt;
+
+이번 감상회의 음원은 가능하면
+아날로그(LP)로 재생하려고 합니다.
+교수(사카모토의 별명)에 대한
+애정을 가지신 분,
+조금 더 깊은 마음으로 그를 바라보고,
+음악을 듣는 색다른 시야를 찾으시는 분들의
+많은 관심과 참여 바랍니다.
+감사합니다.&lt;/p&gt;"
   ></template>
 
     <!-- ============================
